@@ -1,0 +1,63 @@
+0.0
+110
+    110
+
+8
+110
+1.5
+15
+
+
+1.0
+1.e10
+0.3
+
+
+    5
+1
+1
+
+
+1.0
+    0.5
+10.0
+0.10
+
+1.e-10
+1.e-10
+1.e-10
+1.e-14
+
+
+
+
+
+fscanf(f_parametors, "%lf", &ccp.n);
+fscanf(f_parametors, "%lf", &ccp.bd_max);
+fscanf(f_parametors, "%lf", &ccp.bYeldCoeff);
+
+fscanf(f_parametors, "%d", &ccp.NN);
+fscanf(f_parametors, "%d", &ccp.STEPS_PUSH);
+fscanf(f_parametors, "%lf", &ccp.grid_mnojitel1);
+fscanf(f_parametors, "%lf", &ccp.grid_mnojitel2);
+
+
+fscanf(f_parametors, "%lf", &ccp.R0);
+fscanf(f_parametors, "%lf", &ccp.E);
+fscanf(f_parametors, "%lf", &ccp.Nu);
+
+
+fscanf(f_parametors, "%d", &ccp.plasticityMethodType); // 4 - sigma0, 5 - C_pl + sigma0, 1 - C_pl, 2 - C_pl алгоритм Соловейчика
+fscanf(f_parametors, "%d", &ccp.incForsesMode);        // 1 - безумство, 2 - без безумства
+fscanf(f_parametors, "%d", &ccp.constantNormal);
+
+fscanf(f_parametors, "%lf", &ccp.w_project);
+fscanf(f_parametors, "%lf", &ccp.w_midPoint);
+fscanf(f_parametors, "%lf", &ccp.w_stiffness);
+fscanf(f_parametors, "%lf", &ccp.cosTettaMin);
+
+fscanf(f_parametors, "%lf", &ccp.sigmaResidualLimit);
+fscanf(f_parametors, "%lf", &ccp.epsResidualLimit);
+fscanf(f_parametors, "%lf", &ccp.contactDeltaFResidualLimit);
+fscanf(f_parametors, "%lf", &ccp.contactEndPointResidualLimit);
+

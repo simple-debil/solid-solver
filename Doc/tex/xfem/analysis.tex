@@ -1,0 +1,287 @@
+\chapter{XFEM}
+\label{cha:analysis}
+\section{Постановка задачи}
+В области $\Omega$ заданы уравнения равновесия \cite{Pisarenko1981}
+\begin{equation}
+%\sum\limits_{j=1}^{3} \frac{\partial\sigma_{ij}}{\partial x_j} = 0, i=\overline{1,3}.
+%\frac{\partial\sigma_{ij}}{\partial x_j} = 0, i=\overline{1,3}.
+%\bigtriangledown_j\sigma_{ij} = 0.%, i=\overline{1,3}.
+\frac{\partial\sigma_{ij}}{\partial x_j} = 0.%, i=\overline{1,3}.
+\label{F:F1}
+\end{equation}
+На границе $S=S_{1}\cup S_{2}$ заданы кинематические и силовые
+краевые условия
+\begin{equation}
+\left.\mathbf{u}\right|_{S_{1}}=\mathbf{u}_{0}\left(t\right),
+\label{F:F2}
+\end{equation}
+\begin{equation}
+%\left.\sum\limits_{j=1}^{3}\sigma_{ij}n_j\right|_{S_{2}}=P_{i}\left(t\right),\:i=\overline{1,3},
+\left.\sigma_{ij}n_j\right|_{S_{2}}=P_{i}\left(t,\,\mathbf{u}\right),% i=\overline{1,3},
+\label{F:F3}
+\end{equation}
+где $\mathbf{u}$ --- вектор перемещения, $\mathbf{n}$ --- внешняя единичная нормаль к поверхности $S_{2}$, $\mathbf{P}$ --- вектор поверхностных сил.
+
+Компоненты тензора малых деформаций Коши $\varepsilon$ связаны с перемещениями линейными геометрическими соотношениями
+\begin{equation}
+\varepsilon_{ij}=\frac{1}{2} \left(\frac{\partial u_{i}}{\partial x_{j}} + \frac{\partial u_{j}}{\partial x_{i}} \right).
+\label{F:F4}
+\end{equation}
+
+Для изотропного тела тензор напряжений Коши $\sigma$ выражается через упругую составляющую $\varepsilon^{e}$ малой деформации Коши обобщенным законом Гука
+\begin{equation}
+%\sigma_{ij}=\sum\limits_{l=1}^{3} \sum\limits_{k=1}^{3} C_{ijkl}\varepsilon_{kl}^{e},
+%\sigma_{ij}=C_{ijkl}\varepsilon_{kl}^{e},
+\sigma=C:\varepsilon^{e},
+\label{F:F_Hook}
+\end{equation}
+\begin{equation}
+C_{ijkl}=\lambda\delta_{ij}\delta_{kl}+\mu\left(\delta_{ik}\delta_{jl}+\delta_{il}\delta_{jk}\right),
+\label{F:F5}
+\end{equation}
+где $C$ --- тензор модулей упругости материала, $\lambda$, $\mu$ --- модули упругости Ламэ, $\delta$ --- символ Кронекера. Символом \textquotedblleft $:$\textquotedblright\ обозначено двойное скалярное произведение, т.е. $\left(C:\varepsilon\right)_{ij}\equiv C_{ijkl}\varepsilon_{kl}$.
+
+
+
+
+\section{Дискретизация}
+Домножим уравнения \eqref{F:F1} на пробную функцию $\upsilon$, применим формулу Грина интегрирования по частям и учтём силовые краевые условия \eqref{F:F3}, в результате система вариационных уравнений в форме Галеркина примет вид \cite{SoloveychikRoyakPersova2007}
+\begin{equation}
+\int\limits_{\Omega}\sigma_{ij}\frac{\partial\upsilon}{\partial x_j}  d\Omega=\int\limits_{S_{2}}P_{i} \upsilon dS.
+\label{F:F_var2}
+\end{equation}
+
+Согласно шаговому методу для случая малых деформаций \cite{Zienkiewicz1975,Frolov1995}, для некоторого шага по времени $t\longrightarrow t+\Delta t$ запишем уравнение \eqref{F:F_var2} в приращениях
+
+\begin{equation}
+\int\limits_{\Omega}\Delta\sigma_{ij}\frac{\partial\upsilon}{\partial x_j} d\Omega=\int\limits_{S_{2}}\Delta P_{i} \upsilon dS + R_{i},
+\label{F:F_var3}
+\end{equation}
+\begin{equation}
+R_{i} \equiv \int\limits_{S_{2}}{}^{(t)}P_{i} \upsilon dS - \int\limits_{\Omega}{}^{(t)}\sigma_{ij}\frac{\partial\upsilon}{\partial x_j} d\Omega.
+\label{F:F_var3_add}
+\end{equation}
+
+Подставим закон Гука \eqref{F:F_Hook} в приращениях
+\begin{equation}
+\Delta\sigma=C:\Delta\varepsilon
+\label{F:F_alg_ce1}
+\end{equation}
+и \eqref{F:F4} (для приращений) в левую часть \eqref{F:F_var3} и, воспользовавшись симметрией \mbox{${C}_{ijkl}={C}_{ijlk}$}, получим 
+\begin{equation}
+\int\limits_{\Omega}{C}_{ijkl} \frac{\partial \Delta u_{k}}{\partial x_{l}} \frac{\partial\upsilon}{\partial x_j}d\Omega=\int\limits_{S_{2}}\Delta P_{i}\upsilon dS
++R_{i}.
+\label{F:F_alg_var1}
+\end{equation}
+
+Перейдём к конечномерному пространству, натянутому на базисные функции $\left\lbrace\psi_{n}|\,n=\overline{1,N}\right\rbrace$, разложим компоненты приращения
+\begin{equation}
+\Delta u_k^h=\sum_{n=1}^{N}q_{(3n+k-3)}\psi_n,
+\label{F:F_alg_var2}
+\end{equation}
+подставим вместо $\upsilon$ поочерёдно функции $\psi_{n}$ при $n=\overline{1,N}$, получим СЛАУ (здесь все суммирования записаны явно)
+\begin{equation}
+\begin{gathered}
+\sum_{n=1}^{N}\sum_{j=1}^{3}\sum_{k=1}^{3}\sum_{l=1}^{3}
+\int\limits_{\Omega}{C}_{ijkl}q_{(3n+k-3)} \frac{\partial \psi_{n}}{\partial x_{l}} \frac{\partial\psi_{m}}{\partial x_j}d\Omega= \\
+\int\limits_{S_{2}}\Delta P_{i}\psi_{m} dS
++\left.R_{i}\right|_{\upsilon=\psi_{m}},
+\end{gathered}
+\label{F:F_alg_slau1}
+\end{equation}
+которую можно записать в виде
+\begin{equation}
+\mathbf{Gq}=\mathbf{b},
+\label{F:F_slau2}
+\end{equation}
+где элементы матрицы жёсткости $\mathbf{G}$ и вектора $\mathbf{b}$ представимы в виде
+\begin{equation}
+G_{(3m+i-3)(3n+k-3)}=\int\limits_{\Omega}{C}_{ijkl}\frac{\partial\psi_{m}}{\partial x_j}\frac{\partial \psi_{n}}{\partial x_{l}}d\Omega,
+\label{F:F_slau3}
+\end{equation}
+\begin{equation}
+b_{(3m+i-3)}=
+\int\limits_{S_{2}}\Delta P_{i}\psi_{m} dS
++R_{(3m+i-3)}^{\mathrm{node}},
+\label{F:F_slau4}
+\end{equation}
+
+\begin{equation}
+R_{(3m+i-3)}^{\mathrm{node}} \equiv \int\limits_{S_{2}}{}^{(t)}P_{i} \psi_{m} dS - \int\limits_{\Omega}{}^{(t)}\sigma_{ij}\frac{\partial\psi_{m}}{\partial x_j} d\Omega.
+\label{F:F_slau4_add}
+\end{equation}
+
+\section{Интегрирование}
+Рассмотрим некоторый шестигранный КЭ $\Omega_K$. Отображение шаблонного куба $\Omega^E=[-1,1]^3$ в шестигранник $\Omega_K$ с заданными координатами вершин $\hat{\mathbf{x}}_i$ задаётся соотношениями
+\begin{equation}
+\mathbf{x}\left(\bm{\xi}\right)=\sum_{i=1}^{8}\hat{\varphi}_i\left(\bm{\xi}\right)\hat{\mathbf{x}}_i,
+\label{F:F_mapping}
+\end{equation}
+где $\hat{\varphi}_i\left(\bm{\xi}\right)$ -- трилинейные базисные функции на шаблонном кубе  $\Omega^E$:
+\begin{equation}
+\hat{\varphi}_i\left(\bm{\xi}\right)=
+Q_{\beta_1(i)}\left(\xi_1\right)
+Q_{\beta_2(i)}\left(\xi_2\right)
+Q_{\beta_3(i)}\left(\xi_3\right),
+\: i=1\ldots 8
+\label{F:F_mapping_linear1}
+\end{equation}
+\begin{equation}
+\begin{gathered}
+Q_1\left(\alpha\right)=\left(1-\alpha\right)/2, \: 
+Q_2\left(\alpha\right)=\left(1+\alpha\right)/2, \\
+\beta_1(i)=\left(\left(i-1\right) \mathrm{mod} \: 2\right)+1, \\
+\beta_2(i)=\left(\left[\left(i-1\right)/2\right] \mathrm{mod} \: 2\right)+1, \\
+\beta_3(i)=\left[\left(i-1\right)/4\right]+1.
+\end{gathered}
+\label{F:F_mapping_linear2}
+\end{equation}
+Локальные базисные функции можно задать в координатах шаблонного куба:
+\begin{equation}
+\hat{\psi}_{n}=\hat{\psi}_{n}\left(\bm{\xi}\right)
+\label{F:F_mapping_linear3}
+\end{equation}
+
+Разделим шестигранник $\Omega_K$ на шестигранные подобласти, которые не пересекаются трещиной. Пусть некоторый шестигранник $\omega_k$ (подобласть) задан координатами шаблонного куба $\hat{\bm{\xi}}_i$. Тогда координаты вершин шестигранника $\omega_k$ определяются отображением \eqref{F:F_mapping}
+\begin{equation}
+\hat{\hat{\mathbf{x}}}_j=\sum_{i=1}^{8}\hat{\varphi}_i\left(\hat{\bm{\xi}}_j\right)\hat{\mathbf{x}}_i,\: j=1\ldots 8
+\label{F:F_sub_vertexes}
+\end{equation}
+Аналогично \eqref{F:F_mapping}, зададим отображение из шаблонного куба в шестигранник $\omega_k$:
+\begin{equation}
+\mathbf{x}\left(\bm{\eta}\right)=\sum_{i=1}^{8}\hat{\varphi}_i\left(\bm{\eta}\right)\hat{\hat{\mathbf{x}}}_i,
+\label{F:F_sub_mapping}
+\end{equation}
+Базисные функции в подобласти $\omega_k$ зададим интерполянтом в координатах шаблонного куба
+\begin{equation}
+\hat{\hat{\psi}}_n\left(\bm{\eta}\right)=\sum_{i=1}^{8}\hat{\varphi}_i\left(\bm{\eta}\right)
+\hat{\psi}_n\left(\hat{\bm{\xi}}_i\right).
+\label{F:F_sub_busfuncvalues}
+\end{equation}
+Для нахождения производных в выражении
+\begin{equation}
+\int\limits_{\omega_k}\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_j}\frac{\partial\hat{\hat{\psi}}_{n}}{\partial x_{l}}d\Omega
+\label{F:F_sub_int1}
+\end{equation}
+воспользуемся правилом интегрирования сложной функции
+\begin{equation}
+\left(
+\begin{array}{c}
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial\eta_1} \\
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial\eta_2} \\
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial\eta_3} 
+\end{array}
+\right)
+=
+\mathbf{J}
+\left(
+\begin{array}{c}
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_1} \\
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_2} \\
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_3} 
+\end{array}
+\right)
+\label{F:F_sub_dif1}
+\end{equation}
+
+\begin{equation}
+\mathbf{J}=
+\left(
+\begin{array}{ccc}
+\frac{\partial x_1}{\partial \eta_1} & \frac{\partial x_2}{\partial \eta_1} & \frac{\partial x_3}{\partial \eta_1}\\
+\frac{\partial x_1}{\partial \eta_2} & \frac{\partial x_2}{\partial \eta_2} & \frac{\partial x_3}{\partial \eta_2}\\
+\frac{\partial x_1}{\partial \eta_3} & \frac{\partial x_2}{\partial \eta_3} & \frac{\partial x_3}{\partial \eta_3}
+\end{array}
+\right),
+\label{F:F_sub_dif2}
+\end{equation}
+где $\mathbf{J}$ -- якобиан отображения \eqref{F:F_sub_mapping} шаблонного куба в шестигранник $\omega_k$.
+Тогда 
+\begin{equation}
+\int\limits_{\omega_k}\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_j}\frac{\partial\hat{\hat{\psi}}_{n}}{\partial x_{l}}d\Omega
+=\int\limits_{-1}^{1}\int\limits_{-1}^{1}\int\limits_{-1}^{1}
+\frac{\partial\hat{\hat{\psi}}_{m}}{\partial x_j}
+\frac{\partial\hat{\hat{\psi}}_{n}}{\partial x_{l}}\left| \mathbf{J} \right|d\eta_1d\eta_2d\eta_3
+\label{F:F_sub_int2}
+\end{equation}
+Для интегрирования по поверхности трещины
+\begin{equation}
+\int\limits_{S_{k}^+}\Delta P_{i}^+\psi_{m} dS+
+\int\limits_{S_{k}^-}\Delta P_{i}^-\psi_{m} dS
+\label{F:F_sub_int3}
+\end{equation}
+имеем
+\begin{equation}
+\int\limits_{s_k^+}\hat{\hat{\psi}}_{m}ds
+=\int\limits_{-1}^{1}\int\limits_{-1}^{1}
+\hat{\hat{\psi}}_{m}\left| \mathbf{J} \right|d\eta_1d\eta_2
+\label{F:F_sub_int4}
+\end{equation}
+
+
+\section{Пластинка с трещиной}
+Параллелепипед с трещиной растягивается вдоль оси $x$ (рис. \ref{fig:grid}). Параметры задачи приведены в таблице \ref{tab:test1_parameters}. Пластинка закреплена в плоскостях $x = -4, y = -4, z = 0$ по осям $x, y, z$ соответственно, и имеет 3 слоя с различными модулями Юнга (границы слоёв $y=-1, y=1$). К стороне $x=4$ приложены поверхностные силы. Сравнение решений FEM и XFEM изображены на рисунках \ref{fig:res1}, \ref{fig:res2}. На графиках приведены решения, в которых обогащаются узлы 2-х слоёв шестигранников вокруг вершины трещины (XFEM) и решения, в которых обогащается только один слой (XFEM1). Решения различаются не значительно.
+\begin{table}[h!]
+	\caption{Параметры задачи}
+	%\ctable [doinside=\small]
+	
+	%\begin{tabular}{|p{5.3cm}|c|p{7cm}|}
+	%	\hline
+	%	Параметр      & Обозначение & Значение  \\
+	%	\hline
+	\begin{tabular}{|p{5.3cm}|c|p{7cm}|}
+		
+		\hline
+		Параметр & Обозначение & Значение \\
+		\hline
+		Модуль Юнга & $E_1, E_2, E_3$& $10^{6}, 2\cdot 10^{6}, 3\cdot 10^{6}$ Па \\
+		\hline
+		Коэффициент Пуассона & $\nu$ & $0.4$ \\
+		\hline
+		Размеры &  & $8\times 8\times 2$ м\\
+		\hline
+		Разбиение &  & $32\times 32\times 2$ \\
+		\hline
+		Давление на границе справа &  &$-5\cdot 10^3$ Па \\
+		\hline
+		Координаты трещины&  &$-0.85<y<0.85, -1<y<1$\\
+		\hline
+	\end{tabular}
+	\label{tab:test1_parameters}
+\end{table}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[height=0.3\textheight]{pictures/grid.png}
+	\caption{ Сетка
+	}
+	\label{fig:grid}
+\end{figure}
+\begin{figure}[h!]
+	%\centering
+	\includegraphics[height=0.4\textheight]{pictures/0.85_top_bot}
+	\includegraphics[height=0.4\textheight]{pictures/0.85_ux}
+	\caption{ Трещина $-0.85<y<0.85$. Сверху показаны эквивалентные напряжения (слева XFEM, справа FEM). На графике показано сравнение перемещений по оси $x$ в правой части трещины. Напряжения в XFEM достигали значения $3.8\cdot 10^{4}$.
+	}
+	\label{fig:res1}
+\end{figure}
+\begin{figure}[h!]
+	%\centering
+	\includegraphics[height=0.4\textheight]{pictures/1.0_top_bot}
+	\includegraphics[height=0.4\textheight]{pictures/1.0_ux}
+	\caption{ Трещина $-1<y<1$. Сверху показаны эквивалентные напряжения (слева XFEM, справа FEM). На графике показано сравнение перемещений по оси $x$ в правой части трещины. Напряжения в XFEM достигали значения $4.3\cdot 10^{4}$.
+	}
+	\label{fig:res2}
+\end{figure}
+\begin{figure}[h!]
+	%\centering
+	\includegraphics[height=0.4\textheight]{pictures/bc2_0.85_top_bot}
+	\includegraphics[height=0.4\textheight]{pictures/bc2_0.85_ux}
+	\caption{ Трещина $-0.85<y<0.85$, давление приложено к правой части трещины. Сверху показаны эквивалентные напряжения (слева XFEM, справа FEM). На графике показано сравнение перемещений по оси $x$ в правой части трещины. Напряжения в XFEM достигали значения $2.0\cdot 10^{4}$.
+	}
+	\label{fig:res3}
+\end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "rpz"
+%%% End:

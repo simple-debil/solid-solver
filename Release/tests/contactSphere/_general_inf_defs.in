@@ -1,0 +1,52 @@
+fprintf(f_general_inf, "n = %le\n", ccp.n);
+fprintf(f_general_inf, "bd_max = %le\n", ccp.bd_max);
+fprintf(f_general_inf, "bYeldCoeff = %le\n", ccp.bYeldCoeff);
+fprintf(f_general_inf, "\n");
+
+fprintf(f_general_inf, "NN = %d\n", ccp.NN);
+fprintf(f_general_inf, "STEPS_PUSH = %d\n", ccp.STEPS_PUSH);
+fprintf(f_general_inf, "grid_mnojitel1 = %le\n", ccp.grid_mnojitel1);
+fprintf(f_general_inf, "grid_mnojitel2 = %le\n", ccp.grid_mnojitel2);
+fprintf(f_general_inf, "\n");
+
+
+fprintf(f_general_inf, "R0 = %le\n", ccp.R0);
+fprintf(f_general_inf, "E = %le\n", ccp.E);
+fprintf(f_general_inf, "Nu = %le\n", ccp.Nu);
+
+
+fprintf(f_general_inf, "plasticityMethodType = %d\n", ccp.plasticityMethodType);
+fprintf(f_general_inf, "incForsesMode = %d\n", ccp.incForsesMode);
+fprintf(f_general_inf, "constantNormal = %d\n", ccp.constantNormal);
+
+fprintf(f_general_inf, "w_project = %le\n", ccp.w_project);
+fprintf(f_general_inf, "w_midPoint = %le\n", ccp.w_midPoint);
+fprintf(f_general_inf, "w_stiffness = %le\n", ccp.w_stiffness);
+fprintf(f_general_inf, "cosTettaMin = %le\n", ccp.cosTettaMin);
+fprintf(f_general_inf, "\n");
+
+fprintf(f_general_inf, "sigmaResidualLimit = %le\n", ccp.sigmaResidualLimit);
+fprintf(f_general_inf, "epsResidualLimit = %le\n", ccp.epsResidualLimit);
+fprintf(f_general_inf, "contactDeltaFResidualLimit = %le\n", ccp.contactDeltaFResidualLimit);
+fprintf(f_general_inf, "contactEndPointResidualLimit = %le\n", ccp.contactEndPointResidualLimit);
+fprintf(f_general_inf, "\n");
+fprintf(f_general_inf, "____________________\n");
+
+fprintf(f_general_inf, "c1 = %le\n", ccp.c1);
+fprintf(f_general_inf, "c2 = %le\n", ccp.c2);
+fprintf(f_general_inf, "c3 = %le\n", ccp.c3);
+fprintf(f_general_inf, "q = %le\n", ccp.q);
+fprintf(f_general_inf, "\n");
+
+fprintf(f_general_inf, "elasticSigmaLimit = %le\n", ccp.elasticSigmaLimit);
+fprintf(f_general_inf, "max_sigma_eqv = %le\n", ccp.max_sigma_eqv);
+fprintf(f_general_inf, "max_epsElastoPlastic_eqv = %le\n", ccp.max_epsElastoPlastic_eqv);
+fprintf(f_general_inf, "max_q = %le\n", ccp.max_q);
+
+fprintf(f_general_inf, "d0 = %le\n", ccp.d0);
+fprintf(f_general_inf, "d_y = %le\n", ccp.d_y);
+fprintf(f_general_inf, "P_y = %le\n", ccp.P_y);
+fprintf(f_general_inf, "a_y = %le\n", ccp.A_y);
+
+ fprintf(f_general_inf, "\tbP_max_numb = %le\n", ccp.bP_max_numb);
+ fprintf(f_general_inf, "\tbd_residual = %le\n", ccp.unload_bd_res_numb);
